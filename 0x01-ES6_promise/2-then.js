@@ -1,7 +1,7 @@
 export default function handleResponseFromAPI(promise) {
   promise
     .then(
-      () => ({ status: 200, body: 'Success' }),
+      () => ({ status: 200, body: 'success' }),
       () => new Error(),
     )
     .then(() => {
