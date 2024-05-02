@@ -9,10 +9,12 @@ app.get('/', (req, res) => {
 });
 
 app.get('/students', async (req, res) => {
+  let data = 'This is the list of our students\n';
   await countStudents(path, true).then(
-    (str) => res.end(str),
-    (err) => res.end(err.message),
+    (arr) => { data += arr.join('\n'); },
+    (err) => { data += err.message; },
   );
+  res.send(data);
 });
 
 const port = 1245;

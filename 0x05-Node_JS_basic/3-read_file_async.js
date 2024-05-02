@@ -1,5 +1,6 @@
 const fs = require('fs').promises;
 
+/* eslint-disable consistent-return */
 async function countStudents(path, returnRes = false) {
   try {
     const data = await fs.readFile(path, { encoding: 'utf-8' });
@@ -17,23 +18,24 @@ async function countStudents(path, returnRes = false) {
       dataObj[field].push(row);
     });
 
-    let retStr = returnRes ? 'This is the list of our students\n' : '';
-
-    retStr += `Number of students: ${dataRows.length}\n`;
+    const retArr = [];
+    let tmpStr = `Number of students: ${dataRows.length}`;
+    if (returnRes) retArr.push(tmpStr);
+    else console.log(tmpStr);
 
     for (const field in dataObj) {
       if (Array.isArray(dataObj[field])) {
         const len = dataObj[field].length;
         const firstnames = dataObj[field].map((row) => row[0]).join(', ');
 
-        retStr += `Number of students in ${field}: ${len}. List: ${firstnames}\n`;
+        tmpStr = `Number of students in ${field}: ${len}. List: ${firstnames}`;
+        if (returnRes) retArr.push(tmpStr);
+        else console.log(tmpStr);
       }
     }
-    retStr = retStr.trimRight();
-    if (!returnRes) console.log(retStr);
-    return retStr;
+    return retArr;
   } catch (err) {
-    throw Error('Cannot load the database');
+    throw new Error('Cannot load the database');
   }
 }
 

@@ -11,10 +11,12 @@ const app = createServer(async (req, res) => {
   if (req.url === '/') {
     res.end('Hello Holberton School!');
   } else if (req.url === '/students') {
+    res.write('This is the list of our students\n');
     await countStudents(path, true).then(
-      (str) => res.end(str),
-      (err) => res.end(err.message),
+      (arr) => res.write(arr.join('\n')),
+      (err) => res.write(err.message),
     );
+    res.end();
   }
 });
 
