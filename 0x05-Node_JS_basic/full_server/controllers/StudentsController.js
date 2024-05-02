@@ -1,16 +1,15 @@
 import readDatabase from '../utils';
 
-const path = process.argv[2];
+const path = process.argv[2] || '';
 
 class studentsController {
   static async getAllStudents(req, res) {
-    let retStr = 'This is the list of our students\n';
+    const retArr = ['This is the list of our students'];
     await readDatabase(path).then(
       (dataObj) => {
         res.status(200);
-        const retArr = [];
         const keyArr = Object.keys(dataObj).sort((a, b) => (
-          a.toLowerCase() < b.toLowerCase() ? -1 : 1));
+          a.toLowerCase().localeCompare(b.toLowerCase())));
 
         for (const field of keyArr) {
           if (Array.isArray(dataObj[field])) {
@@ -21,10 +20,10 @@ class studentsController {
             );
           }
         }
-        res.send((retStr += retArr.join('\n')));
+        res.send(retArr.join('\n'));
       },
       (err) => {
-        res.status(500).send((retStr += err.message));
+        res.status(500).send(err.message);
       },
     );
   }
