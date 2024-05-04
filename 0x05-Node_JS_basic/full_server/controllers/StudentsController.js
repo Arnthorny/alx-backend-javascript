@@ -1,10 +1,9 @@
 import readDatabase from '../utils';
 
-const path = process.argv[2] || '';
-
 class studentsController {
   static async getAllStudents(req, res) {
     const retArr = ['This is the list of our students'];
+    const path = process.argv[2] || '';
     await readDatabase(path).then(
       (dataObj) => {
         res.status(200);
@@ -29,6 +28,7 @@ class studentsController {
   }
 
   static async getAllStudentsByMajor(req, res) {
+    const path = process.argv[2] || '';
     const validMajors = ['CS', 'SWE'];
     const major = validMajors.filter((major) => major === req.params.major)[0];
     if (major === undefined) {
