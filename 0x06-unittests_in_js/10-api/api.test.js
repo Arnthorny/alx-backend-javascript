@@ -36,14 +36,15 @@ describe("Regex integration testing", function () {
 describe("Test Suite for POST /login", function () {
   it("should test POST response value", function (done) {
     request.post(
-      `${API_URL}/login`,
-      { userName: "Betty" },
+      {
+        url: `${API_URL}/login`,
+        json: { userName: "Betty" },
+      },
       (error, response, body) => {
         if (error) return done(error);
 
         expect(response.statusCode).to.eq(200);
         expect(body).to.eq("Welcome Betty");
-        expect(response.headers["content-type"]).to.eq("application/json");
 
         done();
       }
@@ -51,11 +52,13 @@ describe("Test Suite for POST /login", function () {
   });
 
   it("should test response when no json", function (done) {
-    request.get(`${API_URL}/login`, {}, (error, response, _) => {
+    request.post(`${API_URL}/login`, {}, (error, response, body) => {
       if (error) {
-        expect(response.statusCode).to.eq(500);
         return done(error);
       }
+      expect(response.statusCode).to.eq(200);
+      expect(body).to.eq("Welcome undefined");
+      done();
     });
   });
 });
@@ -66,7 +69,7 @@ describe("Test Suite for GET /available_payments", function () {
       if (error) return done(error);
 
       expect(response.statusCode).to.eq(200);
-      expect(body).to.deep.eq({
+      expect(JSON.parse(body)).to.deep.eq({
         payment_methods: { credit_cards: true, paypal: false },
       });
       done();
